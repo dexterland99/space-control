@@ -11,7 +11,7 @@ import math
 import random
 import os
 from socket import *
-
+from Ships import Ship
 def load_png(name):
     """ Load Image and return Image Object"""
     fullname = os.path.join('data', name)
@@ -45,12 +45,17 @@ def main():
     screen.blit(background, (0, 0))
     pygame.display.flip()
 
+    #testing ships
+    myShip = Ship(50,50,screen)
+    allShips = pygame.sprite.RenderUpdates()
+    myShip.add(allShips)
     #Event loop
     while 1:
         for event in pygame.event.get():
             if event.type == QUIT:
                 return
         screen.blit(background, (0, 0))
+        allShips.draw(screen)
         pygame.display.flip()
 
 if __name__ == '__main__': main()
