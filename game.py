@@ -12,22 +12,14 @@ import random
 import os
 from socket import *
 from Ships import Ship
-def load_png(name):
-    """ Load Image and return Image Object"""
-    fullname = os.path.join('data', name)
-    try:
-        image = pygame.image.load(fullname)
-        if image.get_alpha() is None:
-            image = image.convert()
-        else:
-            image = image.conver_alpha()
-    except pygame.error:
-        print ('Cannot load image: ', fullname)
-        raise SystemExit(message)
-    return image, image.get_rect()
+from node1 import Node
+from worldgen import WorldGen
 
-
+GRIDSIZE = 100
+GRIDW = 40
+GRIDH = 40
 size = width, height = 640, 480
+BLACK = (0, 0, 0)
 
 def main():
     
@@ -44,17 +36,41 @@ def main():
     #blit to the screen
     screen.blit(background, (0, 0))
     pygame.display.flip()
+    
+    world = WorldGen(GRIDSIZE, screen)
+    
+    
+    #creating grid background/points to host nodes
+    MARGIN = 1
+    grid = []
+    for row in range(GRIDSIZE):
+        grid.append([])
+        for column in range(GRIDSIZE):
+            grid[row].append(0)
+    grid[5][5] = 1
 
+    #create empty node array that mimics grid to compare, may not be the most efficient way(?)
+    #nGrid = [100][100]
+
+    mynode = Node(screen, 10, 10)
+    
     #testing ships
     myShip = Ship(50,50,screen)
     allShips = pygame.sprite.RenderUpdates()
     myShip.add(allShips)
+
     #Event loop
     while 1:
         for event in pygame.event.get():
             if event.type == QUIT:
                 return
         screen.blit(background, (0, 0))
+        
+        #draw grid
+        for row in range(GRIDSIZE):
+            for column in range(GRIDSIZE):
+                color = BLACK
+                pygame.draw.rect(screen, color, [(MARGIN + GRIDW) * column + MARGIN, (MARGIN + GRIDH) * row + MARGIN, GRIDW, GRIDH])
         allShips.draw(screen)
         pygame.display.flip()
 
