@@ -15,9 +15,9 @@ from Ships import Ship
 from node1 import Node
 from worldgen import WorldGen
 
-GRIDSIZE = 100
-GRIDW = 40
-GRIDH = 40
+GRIDSIZE = 10
+GRIDW = 20
+GRIDH = 20
 size = width, height = 640, 480
 BLACK = (0, 0, 0)
 
@@ -37,31 +37,27 @@ def main():
     screen.blit(background, (0, 0))
     pygame.display.flip()
     
-    world = WorldGen(GRIDSIZE, screen)
-    
     
     #creating grid background/points to host nodes
     MARGIN = 1
-    grid = []
-    for row in range(GRIDSIZE):
-        grid.append([])
-        for column in range(GRIDSIZE):
-            grid[row].append(0)
-    grid[5][5] = 1
 
     #create empty node array that mimics grid to compare, may not be the most efficient way(?)
     #nGrid = [100][100]
 
-    mynode = Node(screen, 10, 10)
-    
+    world = WorldGen(GRIDSIZE, screen)
+    world.generateMap()
+    world.generateHubs()
+    world.generateNodes()
     #testing ships
     myShip = Ship(50,50,screen)
     allShips = pygame.sprite.RenderUpdates()
-    myShip.add(allShips)
-
+    #myShip.add(allShips)
+    
     #Event loop
     while 1:
         for event in pygame.event.get():
+            if event.type == MOUSEBUTTONDOWN:
+                print(event.pos)
             if event.type == QUIT:
                 return
         screen.blit(background, (0, 0))
@@ -72,6 +68,7 @@ def main():
                 color = BLACK
                 pygame.draw.rect(screen, color, [(MARGIN + GRIDW) * column + MARGIN, (MARGIN + GRIDH) * row + MARGIN, GRIDW, GRIDH])
         allShips.draw(screen)
+        world.drawNodes()
         pygame.display.flip()
 
 if __name__ == '__main__': main()
